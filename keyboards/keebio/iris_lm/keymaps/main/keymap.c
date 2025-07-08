@@ -17,12 +17,15 @@
 #define RCT_GRV LCTL_T(KC_GRV)
 #define SEL_INC A(KC_UP)
 #define SEL_DEC A(KC_DOWN)
+#define G_LEFT  G(KC_LEFT)
+#define G_RIGHT G(KC_RGHT)
+#define DEL_WRD A(KC_BSPC)
 
 
 enum sym_keycodes {
     SS_GRV = SAFE_RANGE,
     SS_LT, SS_GT, SS_MINS, SS_PIPE, SS_CIRC, SS_LCBR, SS_RCBR, SS_DLR,
-    SS_EXLM, SS_ASTR, SS_SLSH, SS_EQL, SS_AMPR, SS_HASH, SS_LPRN, SS_RPRN, SS_SCLN, SS_DQUO, 
+    SS_EXLM, SS_ASTR, SS_SLSH, SS_EQL, SS_AMPR, SS_HASH, SS_LPRN, SS_RPRN, SS_SCLN, SS_DQUO,
     SS_TILD, SS_PLUS, SS_LBRC, SS_RBRC, SS_PERC, SS_AT, SS_COLN, SS_COMM, SS_DOT, SS_QUOT, SS_UNDS
 };
 
@@ -37,17 +40,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [1] = LAYOUT( // navigation
         _______, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        _______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                     SEL_INC, KC_HOME, KC_UP  , KC_END , KC_PGUP, ZM_IN,
+        _______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                     SEL_INC, G_LEFT , KC_UP  , G_RIGHT, KC_PGUP, ZM_IN,
         _______, KC_F11 , KC_MUTE, KC_VOLD, KC_VOLU, KC_F12 ,                     SEL_DEC, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, ZM_OUT,
-        _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX, GO_BACK, XXXXXXX, GO_FWD , XXXXXXX, ZM_RST,
+        _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, _______,   _______, DEL_WRD, GO_BACK, XXXXXXX, GO_FWD , XXXXXXX, ZM_RST,
                                             _______, _______, XXXXXXX,   XXXXXXX, XXXXXXX, MO(3)
     ),
     [2] = LAYOUT( // symbols
         KC_GRV , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        XXXXXXX, SS_GRV , SS_LT  , SS_GT  , SS_MINS, SS_PIPE,                     SS_CIRC, SS_LCBR, SS_RCBR, SS_DLR , XXXXXXX, XXXXXXX,
-        XXXXXXX, SS_EXLM, SS_ASTR, SS_SLSH, SS_EQL , SS_AMPR,                     SS_HASH, SS_LPRN, SS_RPRN, SS_SCLN, SS_DQUO, XXXXXXX,
-        XXXXXXX, SS_TILD, SS_PLUS, SS_LBRC, SS_RBRC, SS_PERC, XXXXXXX,   XXXXXXX, SS_AT  , SS_COLN, SS_COMM, SS_DOT , SS_QUOT, XXXXXXX,
-                                            XXXXXXX, XXXXXXX, XXXXXXX,   XXXXXXX, MO(3)  , XXXXXXX
+        _______, SS_GRV , SS_LT  , SS_GT  , SS_MINS, SS_PIPE,                     SS_CIRC, SS_LCBR, SS_RCBR, SS_DLR , XXXXXXX, XXXXXXX,
+        _______, SS_EXLM, SS_ASTR, SS_SLSH, SS_EQL , SS_AMPR,                     SS_HASH, SS_LPRN, SS_RPRN, SS_SCLN, SS_DQUO, XXXXXXX,
+        _______, SS_TILD, SS_PLUS, SS_LBRC, SS_RBRC, SS_PERC, _______,   _______, SS_AT  , SS_COLN, SS_COMM, SS_DOT , SS_QUOT, XXXXXXX,
+                                            _______, _______, XXXXXXX,   XXXXXXX, MO(3)  , XXXXXXX
     ),
     [3] = LAYOUT( // light
         RM_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UG_TOGG,
