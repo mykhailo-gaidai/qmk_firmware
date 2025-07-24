@@ -3,6 +3,7 @@
 // #define SPLIT_MODS_ENABLE
 // #define RGBLIGHT_SPLIT
 // #define MASTER_LEFT
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
 #define PERMISSIVE_HOLD
 // #define CHORDAL_HOLD
