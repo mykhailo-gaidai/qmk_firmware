@@ -20,6 +20,8 @@
 #define G_LEFT  G(KC_LEFT)
 #define G_RIGHT G(KC_RGHT)
 #define DEL_WRD A(KC_BSPC)
+#define A_LEFT  A(KC_LEFT)
+#define A_RIGHT A(KC_RGHT)
 
 
 enum sym_keycodes {
@@ -35,22 +37,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,                     KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_MINS,
         KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                     KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC,
         RCT_GRV, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                     KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
-        KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , MOD_CAG,   KC_HYPR, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT,
+        KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , MOD_CAG,   KC_HYPR, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_ENT ,
                                             KC_LALT, KC_LGUI, KC_SPC ,   KC_ENT , BSC_NAV, DEL_SYM
     ),
     [1] = LAYOUT( // navigation
         _______, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        _______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                     SEL_INC, G_LEFT , KC_UP  , G_RIGHT, KC_PGUP, ZM_IN,
-        _______, KC_F11 , KC_MUTE, KC_VOLD, KC_VOLU, KC_F12 ,                     SEL_DEC, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, ZM_OUT,
-        _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, _______,   _______, DEL_WRD, GO_BACK, XXXXXXX, GO_FWD , XXXXXXX, ZM_RST,
-                                            _______, _______, XXXXXXX,   XXXXXXX, XXXXXXX, MO(3)
+        _______, KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,                     XXXXXXX, A_LEFT , KC_UP  , A_RIGHT, KC_PGUP, ZM_IN,
+        _______, KC_F11 , KC_MUTE, KC_VOLD, KC_VOLU, KC_F12 ,                     XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, ZM_OUT,
+        _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, _______,   _______, XXXXXXX, GO_BACK, DEL_WRD, GO_FWD , XXXXXXX, ZM_RST,
+                                            _______, _______, _______,   XXXXXXX, _______, MO(3)
     ),
     [2] = LAYOUT( // symbols
         KC_GRV , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         _______, SS_GRV , SS_LT  , SS_GT  , SS_MINS, SS_PIPE,                     SS_CIRC, SS_LCBR, SS_RCBR, SS_DLR , XXXXXXX, XXXXXXX,
         _______, SS_EXLM, SS_ASTR, SS_SLSH, SS_EQL , SS_AMPR,                     SS_HASH, SS_LPRN, SS_RPRN, SS_SCLN, SS_DQUO, XXXXXXX,
         _______, SS_TILD, SS_PLUS, SS_LBRC, SS_RBRC, SS_PERC, _______,   _______, SS_AT  , SS_COLN, SS_COMM, SS_DOT , SS_QUOT, XXXXXXX,
-                                            _______, _______, XXXXXXX,   XXXXXXX, MO(3)  , XXXXXXX
+                                            _______, _______, _______,   XXXXXXX, MO(3)  , XXXXXXX
     ),
     [3] = LAYOUT( // light
         RM_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UG_TOGG,
