@@ -1,33 +1,5 @@
 #include QMK_KEYBOARD_H
 
-// Tap Dance keycodes
-enum td_keycodes {
-    ALT_OSL4
-};
-
-// Define a type containing as many tapdance states as you need
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_SINGLE_TAP,
-    TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD
-} td_state_t;
-
-// Create a global instance of the tapdance state type
-static td_state_t td_state;
-
-// Declare your tapdance functions:
-
-// Function to determine the current tapdance state
-td_state_t cur_dance(tap_dance_state_t *state);
-
-// `finished` and `reset` functions for each tapdance keycode
-void alt_osl4_finished(tap_dance_state_t *state, void *user_data);
-void alt_osl4_reset(tap_dance_state_t *state, void *user_data);
-
-
 #define MOD_CAG LCAG(KC_NO)
 #define GO_BACK G(KC_LBRC)
 #define GO_FWD G(KC_RBRC)
@@ -39,8 +11,6 @@ void alt_osl4_reset(tap_dance_state_t *state, void *user_data);
 #define HR_CLCK LCAG(KC_SPC)
 #define HR_FIND LCAG(KC_F)
 #define BS_SYM  LT(2, KC_BSPC)
-#define ALT_FUN TD(ALT_OSL4)
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT( // alphas
@@ -48,10 +18,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                     KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC,
         CTL_GRV, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                     KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , MO(3)  ,   MO(2)  , KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT,
-                                            ALT_FUN, KC_LGUI, KC_SPC ,   KC_ENT , MO(1)  , BS_SYM
+                                            KC_LALT, KC_LGUI, KC_SPC ,   KC_ENT , MO(1)  , BS_SYM
     ),
     [1] = LAYOUT( // navigation
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_VOLU, KC_VOLD, KC_MUTE, XXXXXXX, OS_LOCK,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_VOLU, KC_VOLD, KC_MUTE, XXXXXXX, OS_LOCK,
         XXXXXXX, XXXXXXX, KC_F7  , KC_F8  , KC_F9  , KC_F11 ,                     KC_HOME, A_LEFT , KC_UP  , A_RIGHT, KC_PGUP, XXXXXXX,
         _______, XXXXXXX, KC_F4  , KC_F5  , KC_F6  , KC_F12 ,                     KC_END , KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX,
         _______, XXXXXXX, KC_F1  , KC_F2  , KC_F3  , KC_F10 , MO(4)  ,   _______, HR_CLCK, GO_BACK, RAYCAST, GO_FWD , XXXXXXX, _______,
@@ -75,73 +45,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                     KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F11 ,                     KC_F12 , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         _______, KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  ,                     KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , XXXXXXX,
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F11 , _______,   _______, KC_F12, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                            _______, _______, _______,   _______, _______, _______
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F11 , XXXXXXX,   XXXXXXX, KC_F12 , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+                                            _______, _______, XXXXXXX,   XXXXXXX, XXXXXXX, XXXXXXX
     )
 };
 
-// Determine the tapdance state to return
-td_state_t cur_dance(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
-        else return TD_SINGLE_HOLD;
-    }
-
-    else if (state->count == 2) {
-        if (state->pressed) return TD_DOUBLE_HOLD;
-        else return TD_DOUBLE_TAP;
-      }
-    else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
-}
-
-// Handle the possible states for each tapdance keycode you define:
-
-void alt_osl4_finished(tap_dance_state_t *state, void *user_data) {
-    td_state = cur_dance(state);
-    switch (td_state) {
-        case TD_SINGLE_TAP: set_oneshot_layer(4, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
-        case TD_SINGLE_HOLD: register_code(KC_LALT); break;
-        case TD_DOUBLE_TAP: set_oneshot_layer(4, ONESHOT_START); set_oneshot_layer(4, ONESHOT_PRESSED); break;
-        case TD_DOUBLE_HOLD: register_code(KC_LALT); layer_on(4); break;
-        default:
-            break;
-    }
-}
-
-void alt_osl4_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_state) {
-        case TD_SINGLE_TAP: break;
-        case TD_SINGLE_HOLD: unregister_code(KC_LALT); break;
-        case TD_DOUBLE_TAP: break;
-        case TD_DOUBLE_HOLD: layer_off(4); unregister_code(KC_LALT); break;
-        default:
-            break;
-    }
-}
-
-// Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
-tap_dance_action_t tap_dance_actions[] = {
-    [ALT_OSL4] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, alt_osl4_finished, alt_osl4_reset)
+enum combo_events {
+    BOTH_BRACKETS,
+    BOTH_PARENS,
+    BOTH_BRACES,
+    BOTH_ANGLES
 };
 
-bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+const uint16_t PROGMEM combo_wr[] = {KC_W, KC_R, COMBO_END};
+const uint16_t PROGMEM combo_xv[] = {KC_X, KC_V, COMBO_END};
+const uint16_t PROGMEM combo_uo[] = {KC_U, KC_O, COMBO_END};
+const uint16_t PROGMEM combo_mdot[] = {KC_M, KC_DOT, COMBO_END};
+combo_t key_combos[] = {
+    [BOTH_BRACKETS] = COMBO_ACTION(combo_wr),
+    [BOTH_BRACES] = COMBO_ACTION(combo_xv),
+    [BOTH_PARENS] = COMBO_ACTION(combo_uo),
+    [BOTH_ANGLES] = COMBO_ACTION(combo_mdot)
+};
 
-    switch (keycode) {
-      case KC_TRNS:
-      case KC_NO:
-        /* Always cancel one-shot layer when another key gets pressed */
-        if (record->event.pressed && is_oneshot_layer_active())
-        clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
-        return true;
-    //   case RESET:
-    //     /* Don't allow reset from oneshot layer state */
-    //     if (record->event.pressed && is_oneshot_layer_active()){
-    //       clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
-    //       return false;
-    //     }
-    //     return true;
-      default:
-        return true;
-    }
-    return true;
+void process_combo_event(uint16_t combo_index, bool pressed) {
+  switch(combo_index) {
+    case BOTH_BRACKETS:
+      if (pressed) {
+        SEND_STRING("[]" SS_TAP(X_LEFT));
+      }
+      break;
+    case BOTH_BRACES:
+      if (pressed) {
+        SEND_STRING("{}" SS_TAP(X_LEFT));
+      }
+      break;
+    case BOTH_PARENS:
+      if (pressed) {
+        SEND_STRING("()" SS_TAP(X_LEFT));
+      }
+      break;
+    case BOTH_ANGLES:
+      if (pressed) {
+        SEND_STRING("<>" SS_TAP(X_LEFT));
+      }
+      break;
   }
+}
