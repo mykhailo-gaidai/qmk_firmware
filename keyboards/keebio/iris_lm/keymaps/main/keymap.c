@@ -1,5 +1,32 @@
 #include QMK_KEYBOARD_H
-#include "print.h"
+
+// Tap Dance keycodes
+enum td_keycodes {
+    ALT_OSL4
+};
+
+// Define a type containing as many tapdance states as you need
+typedef enum {
+    TD_NONE,
+    TD_UNKNOWN,
+    TD_SINGLE_TAP,
+    TD_SINGLE_HOLD,
+    TD_DOUBLE_TAP,
+    TD_DOUBLE_HOLD
+} td_state_t;
+
+// Create a global instance of the tapdance state type
+static td_state_t td_state;
+
+// Declare your tapdance functions:
+
+// Function to determine the current tapdance state
+td_state_t cur_dance(tap_dance_state_t *state);
+
+// `finished` and `reset` functions for each tapdance keycode
+void alt_osl4_finished(tap_dance_state_t *state, void *user_data);
+void alt_osl4_reset(tap_dance_state_t *state, void *user_data);
+
 
 #define MOD_CAG LCAG(KC_NO)
 #define GO_BACK G(KC_LBRC)
@@ -8,10 +35,11 @@
 #define A_LEFT  A(KC_LEFT)
 #define A_RIGHT A(KC_RGHT)
 #define OS_LOCK C(G(KC_Q))
-#define RAYCAST LCAG(KC_E)
+#define RAYCAST C(G(KC_S))
 #define HR_CLCK LCAG(KC_SPC)
 #define HR_FIND LCAG(KC_F)
 #define BS_SYM  LT(2, KC_BSPC)
+#define ALT_FUN TD(ALT_OSL4)
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -20,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                     KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC,
         CTL_GRV, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,                     KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , MO(3)  ,   MO(2)  , KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT,
-                                            KC_LALT, KC_LGUI, KC_SPC ,   KC_ENT , MO(1)  , BS_SYM
+                                            ALT_FUN, KC_LGUI, KC_SPC ,   KC_ENT , MO(1)  , BS_SYM
     ),
     [1] = LAYOUT( // navigation
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_VOLU, KC_VOLD, KC_MUTE, XXXXXXX, OS_LOCK,
@@ -51,3 +79,69 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                             _______, _______, _______,   _______, _______, _______
     )
 };
+
+// Determine the tapdance state to return
+td_state_t cur_dance(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+        else return TD_SINGLE_HOLD;
+    }
+
+    else if (state->count == 2) {
+        if (state->pressed) return TD_DOUBLE_HOLD;
+        else return TD_DOUBLE_TAP;
+      }
+    else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
+}
+
+// Handle the possible states for each tapdance keycode you define:
+
+void alt_osl4_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP: set_oneshot_layer(4, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
+        case TD_SINGLE_HOLD: register_code(KC_LALT); break;
+        case TD_DOUBLE_TAP: set_oneshot_layer(4, ONESHOT_START); set_oneshot_layer(4, ONESHOT_PRESSED); break;
+        case TD_DOUBLE_HOLD: register_code(KC_LALT); layer_on(4); break;
+        default:
+            break;
+    }
+}
+
+void alt_osl4_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP: break;
+        case TD_SINGLE_HOLD: unregister_code(KC_LALT); break;
+        case TD_DOUBLE_TAP: break;
+        case TD_DOUBLE_HOLD: layer_off(4); unregister_code(KC_LALT); break;
+        default:
+            break;
+    }
+}
+
+// Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
+tap_dance_action_t tap_dance_actions[] = {
+    [ALT_OSL4] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, alt_osl4_finished, alt_osl4_reset)
+};
+
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+
+    switch (keycode) {
+      case KC_TRNS:
+      case KC_NO:
+        /* Always cancel one-shot layer when another key gets pressed */
+        if (record->event.pressed && is_oneshot_layer_active())
+        clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
+        return true;
+    //   case RESET:
+    //     /* Don't allow reset from oneshot layer state */
+    //     if (record->event.pressed && is_oneshot_layer_active()){
+    //       clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
+    //       return false;
+    //     }
+    //     return true;
+      default:
+        return true;
+    }
+    return true;
+  }
