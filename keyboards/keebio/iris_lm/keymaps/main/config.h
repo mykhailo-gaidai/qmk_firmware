@@ -4,5 +4,6 @@
 #define FLOW_TAP_TERM 200
 #define TAPPING_TERM 200
 
+#define COMBO_TERM 40
 
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD

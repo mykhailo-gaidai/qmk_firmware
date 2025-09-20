@@ -54,41 +54,102 @@ enum combo_events {
     BOTH_BRACKETS,
     BOTH_PARENS,
     BOTH_BRACES,
-    BOTH_ANGLES
+    BOTH_ANGLES,
+    BOTH_DQUO,
+    BOTH_QUOT,
+    BOTH_GRV
 };
 
+// wide
 const uint16_t PROGMEM combo_wr[] = {KC_W, KC_R, COMBO_END};
 const uint16_t PROGMEM combo_xv[] = {KC_X, KC_V, COMBO_END};
 const uint16_t PROGMEM combo_uo[] = {KC_U, KC_O, COMBO_END};
 const uint16_t PROGMEM combo_mdot[] = {KC_M, KC_DOT, COMBO_END};
+// horizontal
+const uint16_t PROGMEM combo_we[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM combo_er[] = {KC_E, KC_R, COMBO_END};
+const uint16_t PROGMEM combo_sd[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM combo_df[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM combo_fg[] = {KC_F, KC_G, COMBO_END};
+const uint16_t PROGMEM combo_xc[] = {KC_X, KC_C, COMBO_END};
+const uint16_t PROGMEM combo_cv[] = {KC_C, KC_V, COMBO_END};
+// vertical
+const uint16_t PROGMEM combo_ws[] = {KC_W, KC_S, COMBO_END};
+const uint16_t PROGMEM combo_ed[] = {KC_E, KC_D, COMBO_END};
+const uint16_t PROGMEM combo_tg[] = {KC_T, KC_G, COMBO_END};
+const uint16_t PROGMEM combo_rf[] = {KC_R, KC_F, COMBO_END};
+const uint16_t PROGMEM combo_sx[] = {KC_S, KC_X, COMBO_END};
+const uint16_t PROGMEM combo_dc[] = {KC_D, KC_C, COMBO_END};
+const uint16_t PROGMEM combo_fv[] = {KC_F, KC_V, COMBO_END};
+// diagonal
+const uint16_t PROGMEM combo_rd[] = {KC_R, KC_D, COMBO_END};
+const uint16_t PROGMEM combo_fc[] = {KC_F, KC_C, COMBO_END};
+// right - horizontal
+const uint16_t PROGMEM combo_ui[] = {KC_U, KC_I, COMBO_END};
+const uint16_t PROGMEM combo_io[] = {KC_I, KC_O, COMBO_END};
+const uint16_t PROGMEM combo_hj[] = {KC_H, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_jk[] = {KC_J, KC_K, COMBO_END};
+const uint16_t PROGMEM combo_kl[] = {KC_K, KC_L, COMBO_END};
+const uint16_t PROGMEM combo_mcomma[] = {KC_M, KC_COMMA, COMBO_END};
+const uint16_t PROGMEM combo_commadot[] = {KC_COMMA, KC_DOT, COMBO_END};
+// right - vertical
+const uint16_t PROGMEM combo_yh[] = {KC_Y, KC_H, COMBO_END};
+const uint16_t PROGMEM combo_uj[] = {KC_U, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_ik[] = {KC_I, KC_K, COMBO_END};
+const uint16_t PROGMEM combo_ol[] = {KC_O, KC_L, COMBO_END};
+const uint16_t PROGMEM combo_jm[] = {KC_J, KC_M, COMBO_END};
+const uint16_t PROGMEM combo_kcomma[] = {KC_K, KC_COMMA, COMBO_END};
+// right - diagonal
+const uint16_t PROGMEM combo_ij[] = {KC_I, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_km[] = {KC_K, KC_M, COMBO_END};
+
 combo_t key_combos[] = {
     [BOTH_BRACKETS] = COMBO_ACTION(combo_wr),
     [BOTH_BRACES] = COMBO_ACTION(combo_xv),
     [BOTH_PARENS] = COMBO_ACTION(combo_uo),
-    [BOTH_ANGLES] = COMBO_ACTION(combo_mdot)
+    [BOTH_ANGLES] = COMBO_ACTION(combo_mdot),
+    [BOTH_DQUO] = COMBO_ACTION(combo_jm),
+    [BOTH_QUOT] = COMBO_ACTION(combo_kcomma),
+    [BOTH_GRV] = COMBO_ACTION(combo_sx),
+    COMBO(combo_we, KC_LBRC),
+    COMBO(combo_er, KC_RBRC),
+    COMBO(combo_sd, KC_MINS),
+    COMBO(combo_df, KC_EQL),
+    COMBO(combo_fg, KC_PLUS),
+    COMBO(combo_xc, KC_LCBR),
+    COMBO(combo_cv, KC_RCBR),
+    COMBO(combo_ws, KC_AT),
+    COMBO(combo_ed, KC_HASH),
+    COMBO(combo_rf, KC_DLR),
+    COMBO(combo_tg, KC_PERC),
+    COMBO(combo_dc, KC_GRV),
+    COMBO(combo_fv, KC_TILD),
+    COMBO(combo_rd, KC_EXLM),
+    COMBO(combo_fc, KC_UNDS),
+    COMBO(combo_ui, KC_LPRN),
+    COMBO(combo_io, KC_RPRN),
+    COMBO(combo_hj, KC_PIPE),
+    COMBO(combo_jk, KC_DQUO),
+    COMBO(combo_kl, KC_QUOT),
+    COMBO(combo_mcomma, KC_LT),
+    COMBO(combo_commadot, KC_GT),
+    COMBO(combo_yh, KC_CIRC),
+    COMBO(combo_uj, KC_AMPR),
+    COMBO(combo_ik, KC_ASTR),
+    COMBO(combo_ol, KC_BSLS),
+    COMBO(combo_ij, KC_QUES),
+    COMBO(combo_km, KC_SCLN)
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
   switch(combo_index) {
-    case BOTH_BRACKETS:
-      if (pressed) {
-        SEND_STRING("[]" SS_TAP(X_LEFT));
-      }
-      break;
-    case BOTH_BRACES:
-      if (pressed) {
-        SEND_STRING("{}" SS_TAP(X_LEFT));
-      }
-      break;
-    case BOTH_PARENS:
-      if (pressed) {
-        SEND_STRING("()" SS_TAP(X_LEFT));
-      }
-      break;
-    case BOTH_ANGLES:
-      if (pressed) {
-        SEND_STRING("<>" SS_TAP(X_LEFT));
-      }
+    case BOTH_BRACKETS: if (pressed)  SEND_STRING("[]" SS_TAP(X_LEFT)); break;
+    case BOTH_BRACES: if (pressed)  SEND_STRING("{}" SS_TAP(X_LEFT)); break;
+    case BOTH_PARENS: if (pressed)  SEND_STRING("()" SS_TAP(X_LEFT)); break;
+    case BOTH_ANGLES: if (pressed)  SEND_STRING("<>" SS_TAP(X_LEFT)); break;
+    case BOTH_DQUO: if (pressed)  SEND_STRING("\"\"" SS_TAP(X_LEFT)); break;
+    case BOTH_QUOT: if (pressed)  SEND_STRING("''" SS_TAP(X_LEFT)); break;
+    case BOTH_GRV: if (pressed)  SEND_STRING("``" SS_TAP(X_LEFT)); break;
       break;
   }
 }
